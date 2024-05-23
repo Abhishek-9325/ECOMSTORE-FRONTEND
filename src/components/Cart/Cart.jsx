@@ -4,7 +4,7 @@ import { BsCartX } from "react-icons/bs";
 import { Context } from "../../utils/context";
 import CartItem from "./CartItem/CartItem";
 import { loadStripe } from "@stripe/stripe-js";
-import { makePaymentRequest } from "../../utils/api";
+import { createOrder, makePaymentRequest } from "../../utils/api";
 
 import "./Cart.scss";
 import { useNavigate } from "react-router-dom";
@@ -17,17 +17,28 @@ const Cart = () => {
     process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
   );
 
+  // console.log(cartItems);
+
   const handlePayment = async () => {
+    if (!cartItems.length) return;
+    if (!stripePromise) {
+      console.log("Stripe is not loaded");
+      return;
+    }
+    const stripe = await stripePromise;
+    // console.log(stripe);
     try {
-      const stripe = await stripePromise;
-      const res = await makePaymentRequest.post("/api/orders", {
-        products: cartItems,
+      const paymentResponse = await makePaymentRequest(cartItems);
+      // const res = await createOrder(cartItems);
+      // console.log(res, paymentResponse);
+      console.log("Result", paymentResponse);
+      const result = await stripe.redirectToCheckout({
+        sessionId: paymentResponse.id,
       });
-      await stripe.redirectToCheckout({
-        sessionId: res.data.stripeSession.id,
-      });
+      // navigate(`/order/success/${res.id}`);
     } catch (err) {
       console.log(err);
+      navigate("/order/rejected");
     }
   };
 
