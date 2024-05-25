@@ -13,6 +13,19 @@ const AppContext = ({ children }) => {
   const [cartSubTotal, setCartSubTotal] = useState(0);
   const location = useLocation();
 
+  // Load cart data from local storage on component mount
+  useEffect(() => {
+    const savedCartItems = localStorage.getItem("cartItems");
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
+
+  // Update local storage whenever cartItems change
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);

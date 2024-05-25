@@ -3,7 +3,7 @@
   padding: 40px 0;
   position: relative;
   background-image: linear-gradient(to right, #8e2de2, #4a00e0);
-  @include md {
+  @include xl {
     height: calc(100vh - 80px);
   }
   .content {
@@ -16,6 +16,10 @@
     margin: 0 auto;
     position: relative;
     @include md {
+      flex-direction: column;
+      gap: 50px;
+    }
+    @include xl {
       flex-direction: row;
       max-width: 1200px;
     }
@@ -25,6 +29,9 @@
       width: 200px;
       margin-bottom: 20px;
       @include md {
+        width: 30%;
+      }
+      @include xl {
         width: 500px;
         margin-right: 60px;
         margin-top: 50px;
@@ -42,7 +49,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      @include md {
+      @include xl {
         position: absolute;
         left: 50px;
         top: 50%;
@@ -57,7 +64,7 @@
         line-height: 1;
         color: white;
         margin-bottom: 20px;
-        @include md {
+        @include xl {
           font-size: 180px;
         }
       }
@@ -67,6 +74,9 @@
         line-height: 20px;
         margin-bottom: 20px;
         @include md {
+          max-width: 80%;
+        }
+        @include xl {
           max-width: 500px;
           font-size: 18px;
           line-height: 24px;

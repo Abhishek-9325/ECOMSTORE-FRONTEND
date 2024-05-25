@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
 import "./Search.scss";
 import { useNavigate } from "react-router-dom";
@@ -12,9 +12,21 @@ const Search = ({ setSearchModal }) => {
     setQuery(e.target.value);
   };
 
-  let { data } = useFetch(`/api/products/search?query=${query}`);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  if (!query.length) {
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300); // Adjust debounce delay as needed (e.g., 300 milliseconds)
+
+    return () => {
+      clearTimeout(timeoutId); // Clear timeout on every query change
+    };
+  }, [query]);
+
+  let { data } = useFetch(`/api/products/search?query=${debouncedQuery}`);
+
+  if (!debouncedQuery.length) {
     data = null;
   }
 
@@ -47,7 +59,7 @@ const Search = ({ setSearchModal }) => {
               }}
             >
               <div className="image-container">
-                <img src={item.productImage} />
+                <img src={item.productImage} alt={item.title} />
               </div>
               <div className="prod-details">
                 <span className="name">{item.title}</span>

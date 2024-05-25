@@ -11,8 +11,8 @@ const Banner = () => {
         <div className="text-content">
           <h1>SALES</h1>
           <p>
-            Convallis interdum purus adipiscing dis parturient posuere ac a quam
-            a eleifend montes parturient posuere curae tempor
+            Discover a world of elegance and style. Explore our handpicked
+            selection of premium fashion and accessories.
           </p>
           <div className="ctas">
             <div className="banner-cta v2">
