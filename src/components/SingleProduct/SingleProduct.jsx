@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
-import { Context } from "../../utils/context";
 import { useParams } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import { Context } from "../../utils/context";
 import RelatedProducts from "./RelatedProducts/RelatedProducts";
 import {
   FaFacebookF,
@@ -11,13 +11,14 @@ import {
   FaPinterest,
   FaCartPlus,
 } from "react-icons/fa";
+import Skeleton from "../skeleton-loading/Skeleton";
 import "./SingleProduct.scss";
 
 const SingleProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const { handleAddToCart, setShowCart } = useContext(Context);
-  const { data } = useFetch(`/api/products/${id}`);
+  const { data, loading, error } = useFetch(`/api/products/${id}`);
 
   const decrement = () => {
     setQuantity((prevState) => {
@@ -25,18 +26,39 @@ const SingleProduct = () => {
       return prevState - 1;
     });
   };
+
   const increment = () => {
     setQuantity((prevState) => prevState + 1);
   };
 
-  if (!data) return;
+  if (loading) {
+    return (
+      <div className="single-product-main-content">
+        <div className="layout">
+          <Skeleton type="single-product" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="single-product-main-content">
+        <div className="layout">
+          <div className="error">Error: {error.message}</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data) return null;
 
   return (
     <div className="single-product-main-content">
       <div className="layout">
         <div className="single-product-page">
           <div className="left">
-            <img src={data.productImage} />
+            <img src={data.productImage} alt={data.title} />
           </div>
           <div className="right">
             <span className="name">{data.title}</span>
@@ -65,7 +87,7 @@ const SingleProduct = () => {
             <span className="divider" />
             <div className="info-item">
               <span className="text-bold">
-                Category: <span>{data.title}</span>
+                Category: <span>{data.category?.name}</span>
               </span>
               <span className="text-bold">
                 Share:
